@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أوريري — استوديو رقمي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    --primary: #2f2789;
+    --primary-hover: #2c257d;
+    --primary-focus: #3f3792;
+    --primary-button: #4a3dbf;
+    --on-primary: #f6f5ff;
+
+    --ink: #14141a;
+    --ink-subtle: #5e5e6b;
+    --ink-tertiary: #bb3434;
+
+    --canvas: #f4f4f6;
+    --surface-1: #fdfdfd;
+    --surface-2: #fcf0dc;
+    --surface-3: #c8c8ca;
+    --hairline: #14141a;
+    --hairline-soft: #e4e4ea;
+    --inverse-canvas: #101012;
+
+    --success: #1d7745;
+    --danger: #bb3434;
+
+    --r-xs: 6px;
+    --r-sm: 6px;
+    --r-md: 9px;
+    --r-lg: 12px;
+    --r-xl: 16px;
+    --r-pill: 9999px;
+
+    --sp-xxs: 4px;
+    --sp-xs: 8px;
+    --sp-sm: 12px;
+    --sp-md: 16px;
+    --sp-lg: 28px;
+    --sp-xl: 32px;
+    --sp-xxl: 56px;
+    --sp-section: 96px;
+
+    --font: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --ease: ease-in;
+    --dur: 178ms;
+  }
+
+  /* ============ RESET ============ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--canvas);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  img { display: block; max-width: 100%; }
+  ::selection { background: var(--primary); color: #fff; }
+
+  /* ============ TYPOGRAPHY ============ */
+  .display-xl {
+    font-size: clamp(40px, 7vw, 80px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: clamp(-1.4px, -0.35vw, -2.8px);
+  }
+  .display-lg {
+    font-size: clamp(34px, 5.5vw, 56px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -2px;
+  }
+  .display-md {
+    font-size: clamp(28px, 4.5vw, 40px);
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -1.4px;
+  }
+  .headline {
+    font-size: clamp(24px, 3.5vw, 31px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.77px;
+  }
+  .card-title {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .subhead {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--ink-subtle);
+  }
+  .body { font-size: 15px; line-height: 1.5; }
+  .body-sm { font-size: 15px; line-height: 1.5; }
+  .caption { font-size: 14px; line-height: 1.5; color: var(--ink-subtle); }
+  .mono { font-family: var(--mono); font-size: 15px; }
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-subtle);
+  }
+
+  /* ============ LAYOUT ============ */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--sp-xl);
+  }
+  section { padding: var(--sp-section) 0; }
+
+  /* ============ NAV ============ */
+  .top-nav {
+    background: var(--canvas);
+    border-bottom: 1px solid var(--hairline-soft);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background var(--dur) var(--ease);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-sm);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.3px;
+  }
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-xs);
+    background: var(--primary);
+    position: relative;
+  }
+  .brand-mark::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: var(--canvas);
+  }
+  .nav-links {
+    display: flex;
+    gap: var(--sp-xl);
+    align-items: center;
+  }
+  .nav-links a {
+    font-size: 15px;
+    color: var(--ink-subtle);
+    transition: color var(--dur) var(--ease);
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { display: flex; gap: var(--sp-sm); align-items: center; }
+  .mobile-toggle { display: none; font-size: 24px; color: var(--ink); }
+
+  /* ============ BUTTONS ============ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-xs);
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: var(--r-md);
+    transition: background var(--dur) var(--ease),
+                color var(--dur) var(--ease),
+                box-shadow var(--dur) var(--ease),
+                transform var(--dur) var(--ease);
+    min-height: 40px;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--primary-button);
+    color: var(--on-primary);
+  }
+  .btn-primary:hover { background: var(--primary-hover); color: #fff; }
+  .btn-primary:active { background: var(--primary-focus); }
+  .btn-primary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(63, 55, 146, 0.5);
+  }
+  .btn-secondary {
+    background: var(--surface-1);
+    color: var(--ink);
+    border: 1px solid var(--hairline-soft);
+  }
+  .btn-secondary:hover { background: var(--canvas); }
+  .btn-tertiary {
+    background: var(--canvas);
+    color: var(--ink-subtle);
+    padding: 10px 12px;
+  }
+  .btn-tertiary:hover { color: var(--ink); }
+  .btn-lg { padding: 14px 22px; font-size: 16px; min-height: 48px; }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 120px 0 96px;
+    position: relative;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-xl);
+    max-width: 900px;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-xs);
+    padding: 6px 12px;
+    background: var(--surface-1);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--r-pill);
+    font-size: 13px;
+    color: var(--ink-subtle);
+    width: fit-content;
+  }
+  .hero-eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--success);
+  }
+  .hero h1 { margin-top: var(--sp-lg); }
+  .hero h1 .accent { color: var(--primary); }
+  .hero-subhead {
+    margin-top: var(--sp-lg);
+    max-width: 620px;
+    color: var(--ink-subtle);
+    font-size: 20px;
+    line-height: 1.5;
+  }
+  .hero-actions {
+    margin-top: var(--sp-xl);
+    display: flex;
+    gap: var(--sp-sm);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* Meta strip */
+  .hero-meta {
+    margin-top: var(--sp-xxl);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--hairline-soft);
+    padding-top: var(--sp-lg);
+    gap: var(--sp-lg);
+  }
+  .hero-meta .item .num {
+    font-size: 31px;
+    font-weight: 600;
+    letter-spacing: -0.77px;
+    line-height: 1.15;
+  }
+  .hero-meta .item .label {
+    font-size: 14px;
+    color: var(--ink-subtle);
+    margin-top: var(--sp-xxs);
+  }
+
+  /* ============ SECTION HEAD ============ */
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--sp-xl);
+    margin-bottom: var(--sp-xxl);
+    flex-wrap: wrap;
+  }
+  .section-head .lead { max-width: 640px; }
+  .section-head .lead .eyebrow { margin-bottom: var(--sp-md); }
+  .section-head .lead p {
+    margin-top: var(--sp-md);
+    color: var(--ink-subtle);
+    font-size: 20px;
+  }
+
+  /* ============ FEATURE GRID (2-up) ============ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-lg);
+  }
+  .feature-card {
+    background: var(--canvas);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--r-lg);
+    padding: var(--sp-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-md);
+    transition: border-color var(--dur) var(--ease),
+                background var(--dur) var(--ease);
+    min-height: 220px;
+  }
+  .feature-card:hover {
+    border-color: var(--ink);
+    background: var(--surface-1);
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--r-md);
+    background: var(--surface-1);
+    border: 1px solid var(--hairline-soft);
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+  }
+  .feature-icon svg { width: 20px; height: 20px; }
+  .feature-card h3 {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .feature-card p {
+    color: var(--ink-subtle);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* ============ SHOWCASE ============ */
+  .showcase {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-lg);
+  }
+  .showcase-card {
+    border-radius: var(--r-lg);
+    border: 1px solid var(--hairline-soft);
+    background: var(--surface-1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--dur) var(--ease),
+                border-color var(--dur) var(--ease);
+  }
+  .showcase-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ink);
+  }
+  .showcase-visual {
+    aspect-ratio: 16 / 10;
+    background: var(--canvas);
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  /* Geometric abstract visuals (no stock imagery) */
+  .vis-orbit { position: relative; width: 60%; aspect-ratio: 1; }
+  .vis-orbit .ring {
+    position: absolute; inset: 0;
+    border: 1px solid var(--hairline-soft);
+    border-radius: 50%;
+  }
+  .vis-orbit .ring:nth-child(2) { inset: 15%; }
+  .vis-orbit .ring:nth-child(3) { inset: 30%; }
+  .vis-orbit .core {
+    position: absolute; inset: 42%;
+    background: var(--primary);
+    border-radius: 50%;
+  }
+  .vis-orbit .satellite {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: var(--ink);
+    border-radius: 50%;
+    top: 12%; right: 22%;
+  }
+
+  .vis-grid {
+    width: 70%; aspect-ratio: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .vis-grid span {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--r-xs);
+  }
+  .vis-grid span:nth-child(6),
+  .vis-grid span:nth-child(11) { background: var(--primary); }
+
+  .vis-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 60%;
+  }
+  .vis-bars span {
+    width: 22px;
+    background: var(--hairline-soft);
+    border-radius: var(--r-xs);
+    transition: background var(--dur) var(--ease);
+  }
+  .showcase-card:hover .vis-bars span { background: var(--primary); }
+  .vis-bars span:nth-child(1) { height: 40%; }
+  .vis-bars span:nth-child(2) { height: 65%; }
+  .vis-bars span:nth-child(3) { height: 90%; }
+  .vis-bars span:nth-child(4) { height: 55%; }
+  .vis-bars span:nth-child(5) { height: 75%; }
+
+  .vis-type {
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -2.5px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .vis-type .accent { color: var(--primary); }
+
+  .showcase-body {
+    padding: var(--sp-lg);
+    border-top: 1px solid var(--hairline-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-md);
+  }
+  .showcase-body .meta .label {
+    font-size: 13px;
+    color: var(--ink-subtle);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .showcase-body .meta .title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  /* ============ CTA BAND ============ */
+  .cta-band {
+    background: var(--surface-1);
+    border: 1px solid var(--hairline-soft);
+    border-radius: var(--r-lg);
+    padding: var(--sp-xxl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-xl);
+    flex-wrap: wrap;
+  }
+  .cta-band .text { max-width: 560px; }
+  .cta-band h2 {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    letter-spacing: -1.4px;
+    line-height: 1.08;
+    margin-bottom: var(--sp-md);
+  }
+  .cta-band p { color: var(--ink-subtle); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    border-top: 1px solid var(--hairline-soft);
+    padding: var(--sp-xxl) 0 var(--sp-xl);
+    background: var(--canvas);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--sp-xl);
+    margin-bottom: var(--sp-xxl);
+  }
+  .footer-brand p {
+    margin-top: var(--sp-md);
+    color: var(--ink-subtle);
+    max-width: 280px;
+    font-size: 14px;
+  }
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--sp-md);
+  }
+  .footer-col a {
+    display: block;
+    color: var(--ink-subtle);
+    font-size: 14px;
+    margin-bottom: var(--sp-sm);
+    transition: color var(--dur) var(--ease);
+  }
+  .footer-col a:hover { color: var(--ink); }
+  .footer-bottom {
+    border-top: 1px solid var(--hairline-soft);
+    padding-top: var(--sp-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-md);
+    flex-wrap: wrap;
+    color: var(--ink-subtle);
+    font-size: 14px;
+  }
+
+  /* ============ REVEAL ANIMATION ============ */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms ease, transform 600ms ease;
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1024px) {
+    .hero-meta { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 var(--sp-md); }
+    section { padding: var(--sp-xxl) 0; }
+    .hero { padding: 72px 0 56px; }
+    .nav-links { display: none; }
+    .mobile-toggle { display: block; }
+    .nav-cta .btn-secondary { display: none; }
+    .feature-grid,
+    .showcase { grid-template-columns: 1fr; }
+    .cta-band { padding: var(--sp-xl); }
+    .footer-grid { grid-template-columns: 1fr; gap: var(--sp-xl); }
+    .nav-inner { height: 64px; }
+  }
+  @media (max-width: 480px) {
+    .hero-meta { grid-template-columns: 1fr 1fr; gap: var(--sp-md); }
+    .hero-actions .btn { flex: 1; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    * { animation-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="top-nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand" aria-label="أوريري">
+      <span class="brand-mark" aria-hidden="true"></span>
+      أوريري
+    </a>
+    <nav class="nav-links" aria-label="التنقل الرئيسي">
+      <a href="#features">المزايا</a>
+      <a href="#work">الأعمال</a>
+      <a href="#process">العملية</a>
+      <a href="#contact">تواصل</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-secondary">تسجيل الدخول</a>
+      <a href="#contact" class="btn btn-primary">ابدأ الآن</a>
+      <button class="mobile-toggle" aria-label="القائمة">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-eyebrow reveal">
+        <span class="dot"></span>
+        <span>متاح لاستقبال مشاريع الربع الرابع</span>
+      </div>
+      <h1 class="display-xl reveal">
+        نصمّم تجارب رقمية<br>
+        <span class="accent">هادئة ودقيقة.</span>
+      </h1>
+      <p class="hero-subhead reveal">
+        استوديو مستقل يجمع بين التصميم والهندسة. نبني واجهات تُقاس بالمسافات
+        والتايبوغرافي — لا بالصور البراقة.
+      </p>
+      <div class="hero-actions reveal">
+        <a href="#contact" class="btn btn-primary btn-lg">احجز جلسة تعريفية</a>
+        <a href="#work" class="btn btn-tertiary">شاهد الأعمال ←</a>
+      </div>
+    </div>
+
+    <div class="hero-meta reveal">
+      <div class="item">
+        <div class="num">+40</div>
+        <div class="label">مشروع منجز</div>
+      </div>
+      <div class="item">
+        <div class="num">9</div>
+        <div class="label">سنوات خبرة</div>
+      </div>
+      <div class="item">
+        <div class="num">+20</div>
+        <div class="label">عميل دائم</div>
+      </div>
+      <div class="item">
+        <div class="num">100%</div>
+        <div class="label">تسليم في الموعد</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <div class="eyebrow">ما نقدمه</div>
+        <h2 class="display-md">أربع ركائز نبني عليها كل مشروع.</h2>
+        <p>من أول وireframe حتى آخر بكسل مضبوط — نتعامل مع التصميم كمنظومة، لا كصفحات منفصلة.</p>
+      </div>
+      <a href="#contact" class="btn btn-secondary">اطلب عرض سعر</a>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <h3>تصميم واجهات</h3>
+        <p>أنظمة تصميم متكاملة بمكوّنات قابلة لإعادة الاستخدام، مبنية على رموز تصميمية واضحة.</p>
+      </article>
+
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>تطوير الواجهات</h3>
+        <p>كود نظيف وسريع، مع انتقالات دقيقة وأداء محسوب — دون حشو أو مكتبات زائدة.</p>
+      </article>
+
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>دراسات تجربة المستخدم</h3>
+        <p>خرائط رحلة، اختبارات استخدام، ونماذج أولية تفاعلية قبل كتابة أي سطر كود.</p>
+      </article>
+
+      <article class="feature-card reveal">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <h3>الهوية البصرية</h3>
+        <p>شعار، تايبوغرافي، ونظام ألوان متماسك يبني حضوراً ذا شخصية، لا مجرد شعار لطيف.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK / SHOWCASE ============ -->
+<section id="work">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <div class="eyebrow">أعمال مختارة</div>
+        <h2 class="display-md">نُظهر ما نصنع، لا ما ندّعي.</h2>
+        <p>مقتطفات من مشاريع حديثة — كل واحدة منها بُنيت من الصفر، بنظام تصميم خاص.</p>
+      </div>
+      <a href="#contact" class="btn btn-tertiary">كل الأعمال ←</a>
+    </div>
+
+    <div class="showcase">
+      <a href="#work" class="showcase-card reveal">
+        <div class="showcase-visual">
+          <div class="vis-orbit">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="core"></div>
+            <div class="satellite"></div>
+          </div>
+        </div>
+        <div class="showcase-body">
+          <div class="meta">
+            <div class="label">منصة SaaS</div>
+            <div class="title">مدار — لوحة تحليلات</div>
+          </div>
+          <span class="mono">2026</span>
+        </div>
+      </a>
+
+      <a href="#work" class="showcase-card reveal">
+        <div class="showcase-visual">
+          <div class="vis-grid">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="showcase-body">
+          <div class="meta">
+            <div class="label">تجارة إلكترونية</div>
+            <div class="title">خزنة — متجر منتجات</div>
+          </div>
+          <span class="mono">2025</span>
+        </div>
+      </a>
+
+      <a href="#work" class="showcase-card reveal">
+        <div class="showcase-visual">
+          <div class="vis-bars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="showcase-body">
+          <div class="meta">
+            <div class="label">هوية بصرية</div>
+            <div class="title">مقياس — استوديو معماري</div>
+          </div>
+          <span class="mono">2025</span>
+        </div>
+      </a>
+
+      <a href="#work" class="showcase-card reveal">
+        <div class="showcase-visual">
+          <div class="vis-type">أ<span class="accent">و</span>ر</div>
+        </div>
+        <div class="showcase-body">
+          <div class="meta">
+            <div class="label">موقع تعريفي</div>
+            <div class="title">أوريري — الاستوديو</div>
+          </div>
+          <span class="mono">2024</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section id="process">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <div class="eyebrow">كيف نعمل</div>
+        <h2 class="display-md">أربع مراحل، بلا مفاجآت.</h2>
+        <p>عملية واضحة تُبقي العميل على اطلاع دائم، وتُقلّل التعديلات في اللحظات الأخيرة.</p>
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature-card reveal">
+        <div class="caption mono">01 — الاكتشاف</div>
+        <h3>نفهم قبل أن نصمم</h3>
+        <p>جلسة تعريفية، تحليل المنافسين، وتحديد جمهورك بدقة. نخرج بملخص مشروع من صفحة واحدة.</p>
+      </article>
+      <article class="feature-card reveal">
+        <div class="caption mono">02 — الهيكل</div>
+        <h3>نرسم قبل أن نلوّن</h3>
+        <p>خرائط رحلة المستخدم وwireframes منخفضة الدقة. نتفق على الهيكل قبل لمس التفاصيل البصرية.</p>
+      </article>
+      <article class="feature-card reveal">
+        <div class="caption mono">03 — التصميم</div>
+        <h3>نظام لا صفحات</h3>
+        <p>رموز تصميمية، مكوّنات، وحالات تفاعلية. تسليم Figma مع توثيق كامل لكل عنصر.</p>
+      </article>
+      <article class="feature-card reveal">
+        <div class="caption mono">04 — الإطلاق</div>
+        <h3>نشحن ونراقب</h3>
+        <p>تطوير، اختبار، ثم إطلاق. نبقى معك أسبوعين بعد الإطلاق لأي تعديلات أو تحسينات.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section id="contact">
+  <div class="container">
+    <div class="cta-band reveal">
+      <div class="text">
+        <h2>لديك مشروع في ذهنك؟</h2>
+        <p>أخبرنا عنه في بضع جمل. نرد خلال يوم عمل واحد، ونحدد معاً إن كنا الشريك المناسب.</p>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap;">
+        <a href="mailto:hello@example.com" class="btn btn-primary btn-lg">راسلنا</a>
+        <a href="#features" class="btn btn-secondary btn-lg">تعرف علينا</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          أوريري
+        </a>
+        <p>استوديو تصميم وهندسة رقمية. نبني واجهات هادئة ودقيقة، تُقاس بالمسافات لا بالصور.</p>
+      </div>
+      <div class="footer-col">
+        <h4>الاستوديو</h4>
+        <a href="#features">المزايا</a>
+        <a href="#work">الأعمال</a>
+        <a href="#process">العملية</a>
+        <a href="#contact">تواصل</a>
+      </div>
+      <div class="footer-col">
+        <h4>الموارد</h4>
+        <a href="#">المدونة</a>
+        <a href="#">نظام التصميم</a>
+        <a href="#">الأسعار</a>
+        <a href="#">الأسئلة الشائعة</a>
+      </div>
+      <div class="footer-col">
+        <h4>قانوني</h4>
+        <a href="#">سياسة الخصوصية</a>
+        <a href="#">الشروط</a>
+        <a href="#">ملفات تعريف الارتباط</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 أوريري. جميع الحقوق محفوظة.</span>
+      <span class="mono">صُنع بعناية — لا بسرعة.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Reveal on scroll
+  const els = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => io.observe(el));
+  } else {
+    els.forEach(el => el.classList.add('in'));
+  }
+
+  // Sticky nav subtle shadow on scroll
+  const nav = document.querySelector('.top-nav');
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 8) nav.style.boxShadow = '0 1px 0 rgba(20,20,26,0.06)';
+    else nav.style.boxShadow = 'none';
+    lastY = y;
+  }, { passive: true });
+
+  // Mobile toggle (simple show/hide inline)
+  const toggle = document.querySelector('.mobile-toggle');
+  const links = document.querySelector('.nav-links');
+  if (toggle && links) {
+    toggle.addEventListener('click', () => {
+      const open = links.style.display === 'flex';
+      links.style.display = open ? 'none' : 'flex';
+      links.style.position = 'absolute';
+      links.style.top = '64px';
+      links.style.right = '16px';
+      links.style.left = '16px';
+      links.style.background = 'var(--surface-1)';
+      links.style.border = '1px solid var(--hairline-soft)';
+      links.style.borderRadius = 'var(--r-md)';
+      links.style.padding = '16px';
+      links.style.flexDirection = 'column';
+      links.style.gap = '12px';
+    });
+  }
+</script>
+</body>
+</html>
